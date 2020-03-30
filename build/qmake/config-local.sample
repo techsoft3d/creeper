@@ -1,0 +1,12 @@
+win32 {
+	HOOPS_VISUALIZE_PATH=C:\ts3d\HOOPS_Visualize_2019
+	HOOPS_EXCHANGE_PATH=C:\ts3d\HOOPS_Exchange_Publish_2019
+}
+linux {
+	HOOPS_VISUALIZE_PATH=/opt/local/ts3d/HOOPS_Visualize_2019
+	HOOPS_EXCHANGE_PATH=/opt/local/ts3d/HOOPS_Exchange_Publish_2019
+}
+macx {
+	HOOPS_VISUALIZE_PATH=/opt/local/ts3d/HOOPS_Visualize_2019
+	HOOPS_EXCHANGE_PATH=/opt/local/ts3d/HOOPS_Exchange_Publish_2019	
+}

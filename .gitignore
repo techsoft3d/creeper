@@ -1,0 +1,11 @@
+viewer.sln
+viewer.VC.db
+viewer.VC.VC.opendb
+bin
+.vs
+ipch
+Makefile
+versions-local.pri
+paths-local.pri
+ui/ui.sln
+ui/Makefile

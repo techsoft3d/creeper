@@ -1,0 +1,15 @@
+<RCC>
+    <qresource>
+        <file alias="hiddenLineIcon">ico/hiddenLineIcon.xpm</file>
+        <file alias="genericIcon">ico/largeicon.xpm</file>
+        <file alias="smoothIcon">ico/smoothIcon.xpm</file>
+        <file alias="pointIcon">ico/toolapertureselect.image.xpm</file>
+        <file alias="orbitIcon">ico/toolorbit.image.xpm</file>
+        <file alias="panIcon">ico/toolpan.image.xpm</file>
+        <file alias="areaIcon">ico/toolwindowselect.image.xpm</file>
+        <file alias="zoomFitIcon">ico/toolzoomfit.image.xpm</file>
+        <file alias="zoomAreaIcon">ico/toolzoomwindow.image.xpm</file>
+        <file alias="openIcon">ico/toolopenfile.image.xpm</file>
+        <file alias="flyIcon">ico/toolfly.image.xpm</file>
+    </qresource>
+</RCC>

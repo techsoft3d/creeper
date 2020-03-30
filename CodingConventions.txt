@@ -1,0 +1,21 @@
+Use ts3d namespace
+Use uppercase camel case for classes.  Example: CamelCaseClass
+Use lowercase camel case for variables. Example: myVariable
+Use _ as prefix to all private data.
+All member data should be private and accessed via setters/getters
+Keep brackets on same line
+ when scoping:
+	Example: if() { 
+	}
+
+	instead of
+	
+	if()
+	{
+	}
+
+Use auto keyword to declar vars
+Use const when applicable, example, when variable won't ever change.
+Always put constant value on the left when doing comparison: Example: ( 8 == j)
+No global data
+No compiler warnings
