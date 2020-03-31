@@ -86,6 +86,7 @@ ts3d::Application::Application( int &argc, char *argv[] )
 
 #ifdef USING_EXCHANGE
     QDir exchangePath;
+	A3DBool loadSuccessful = FALSE;
     if( CommandLineOptions::instance().isExchangePathSet() ) {
         exchangePath.cd( CommandLineOptions::instance().getExchangePath() );
         exchangePath.cd( "bin" );
@@ -100,13 +101,21 @@ ts3d::Application::Application( int &argc, char *argv[] )
             QMessageBox::warning( nullptr, QGuiApplication::applicationDisplayName(),
                                   "The Exchange path does not exist: " + exchangePath.path() );
         }
-    }
-
 #if defined(_MSC_VER)
-    if(!A3DSDKLoadLibrary(exchangePath.path().toStdWString().c_str())) {
+		loadSuccessful = A3DSDKLoadLibrary(exchangePath.path().toStdWString().c_str());
 #else
-    if(!A3DSDKLoadLibrary(qPrintable( exchangePath.path() ))) {
-#endif
+		loadSuccessful = A3DSDKLoadLibrary(qPrintable( exchangePath.path() ));
+#endif    
+	}
+	else {
+#if defined(_MSC_VER)
+		loadSuccessful = A3DSDKLoadLibrary(static_cast<TCHAR*>(nullptr));
+#else
+		loadSuccessful = A3DSDKLoadLibrary(static_cast<A3DUTF8Char*>(nullptr));
+#endif	
+	}
+
+	if(!loadSuccessful) {
         QMessageBox::critical( nullptr, QGuiApplication::applicationDisplayName(),
                                tr("Application", "Unable to load Exchange." ) );
 
