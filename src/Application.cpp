@@ -99,7 +99,7 @@ ts3d::Application::Application( int &argc, char *argv[] )
 #endif
         if( !exchangePath.exists() ) {
             QMessageBox::warning( nullptr, QGuiApplication::applicationDisplayName(),
-                                  "The Exchange path does not exist: " + exchangePath.path() );
+                                  "The Exchange path does not exist: " + exchangePath.path() );			
         }
 #if defined(_MSC_VER)
 		loadSuccessful = A3DSDKLoadLibrary(exchangePath.path().toStdWString().c_str());
@@ -117,7 +117,7 @@ ts3d::Application::Application( int &argc, char *argv[] )
 
 	if(!loadSuccessful) {
         QMessageBox::critical( nullptr, QGuiApplication::applicationDisplayName(),
-                               tr("Application", "Unable to load Exchange." ) );
+                               tr("Application\nUnable to load Exchange." ) );
 
         QTimer::singleShot( 0, [] { qApp->quit(); } );
         return;
