@@ -3,7 +3,7 @@
 #include <QDebug>
 
 ts3d::CuttingSectionSlots::CuttingSectionSlots( void ) {
-    _cuttingSectionCommands = new CuttingSectionCommands();
+	_cuttingSectionCommands.reset( new CuttingSectionCommands );
     _hpsWidget = nullptr;
 
     _invertX = false;

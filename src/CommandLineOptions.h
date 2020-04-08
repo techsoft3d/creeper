@@ -27,8 +27,8 @@ namespace ts3d {
          * @{
          */
     public:
-        bool isExchangePathSet( void ) const;
         QString getExchangePath( void ) const;
+
     private:
         QCommandLineOption _exchangePath;
         /*! @} */

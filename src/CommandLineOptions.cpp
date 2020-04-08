@@ -1,5 +1,8 @@
 #include "CommandLineOptions.h"
 
+#define xstr(s) __str(s)
+#define __str(s) #s
+
 // static
 ts3d::CommandLineOptions &ts3d::CommandLineOptions::instance( void ) {
     static CommandLineOptions _instance;
@@ -30,11 +33,6 @@ QString ts3d::CommandLineOptions::getHelpText( void ) const {
     return _parser.helpText();
 }
 
-
-bool ts3d::CommandLineOptions::isExchangePathSet( void ) const {
-    return _parser.isSet(_exchangePath);
-}
-
 QString ts3d::CommandLineOptions::getExchangePath( void ) const {
     return _parser.value(_exchangePath);
 }
@@ -42,7 +40,7 @@ QString ts3d::CommandLineOptions::getExchangePath( void ) const {
 ts3d::CommandLineOptions::CommandLineOptions( void )
     : _version( _parser.addVersionOption() ),
       _help( _parser.addHelpOption() ),
-      _exchangePath( {"x", "exchange_path"}, QObject::tr("CommandLineOptions", "Specifies the root folder of the Exchange installation." ), "exchange" ) {
+      _exchangePath( {"x", "exchange_path"}, QObject::tr("CommandLineOptions", "Specifies the root directory of the Exchange installation. (NOT the bin dir!)" ), "exchange", xstr(HOOPS_EXCHANGE_PATH) ) {
 
     _parser.setApplicationDescription( QObject::tr("CommandLineOptions", "This project is a sample implementation of a cross platform HOOPS Viewer." ) );
     _parser.addOption( _exchangePath );
