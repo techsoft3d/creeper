@@ -9,3 +9,17 @@ versions-local.pri
 paths-local.pri
 ui/ui.sln
 ui/Makefile
+build/build-creeper-*
+creeper.pro.user
+config-local.pri
+Info.plist
+qrc_viewer.cpp
+build/qmake/.moc
+build/qmake/.obj
+build/qmake/viewer.vcxproj
+build/qmake/viewer.vcxproj.filters
+build/qmake/viewer.vcxproj.user
+viewer.vcxproj
+build/qmake/Debug
+build/qmake/viewer.xcodeproj
+ui_pch.h.cpp

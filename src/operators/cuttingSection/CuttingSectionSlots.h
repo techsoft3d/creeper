@@ -25,8 +25,8 @@ namespace ts3d {
         void getCurrentStatus( bool &planeX, bool &invertX, bool &planeY, bool &invertY, bool &planeZ, bool &invertZ, bool &setSectioning, bool &showPlanes );
 
     private:
-        ts3d::HPSWidget *_hpsWidget;
-        CuttingSectionCommands *_cuttingSectionCommands;
+        QPointer<ts3d::HPSWidget> _hpsWidget;
+        QSharedPointer<CuttingSectionCommands> _cuttingSectionCommands;
 
         bool _invertX;
         bool _invertY;

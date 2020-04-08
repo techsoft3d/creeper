@@ -40,6 +40,18 @@ HPS::UTF8 ts3d::Application::getHighlightStyleName( void ) const {
     return HPS::UTF8( "Its_a_creeper_highlight_stlye" );
 }
 
+namespace {
+    QString getExchangeArch( void ) {
+        #if defined(_MSC_VER)
+            return "win64";
+        #elif defined(__APPLE__)
+            return "osx64";
+        #elif defined(__linux__)
+            return "linux64";
+        #endif
+        return "unknown";
+    }
+}
 ts3d::Application::Application( int &argc, char *argv[] )
     : QApplication( argc, argv ),
     _world( HOOPS_LICENSE ) {
@@ -53,7 +65,6 @@ ts3d::Application::Application( int &argc, char *argv[] )
     if (translator.load("viewer_" + QLocale::system().name())) {
         installTranslator(&translator);
     }
-
     auto const parseResult = CommandLineOptions::instance().parse();
     switch( parseResult ) {
     case CommandLineOptions::Status::Ok:
@@ -85,62 +96,20 @@ ts3d::Application::Application( int &argc, char *argv[] )
     _portfolioKey.DefineNamedStyle( getHighlightStyleName(), _highlightSegmentKey );
 
 #ifdef USING_EXCHANGE
-    QDir exchangePath;
-	A3DBool loadSuccessful = FALSE;
-    if( CommandLineOptions::instance().isExchangePathSet() ) {
-        exchangePath.cd( CommandLineOptions::instance().getExchangePath() );
-        exchangePath.cd( "bin" );
-#if defined(_MSC_VER)
-        exchangePath.cd( "win64" );
-#elif __APPLE__
-        exchangePath.cd( "osx64" );
-#elif __linux__
-        exchangePath.cd( "linux64" );
-#endif
-        if( !exchangePath.exists() ) {
-            QMessageBox::warning( nullptr, QGuiApplication::applicationDisplayName(),
-                                  "The Exchange path does not exist: " + exchangePath.path() );			
+    QDir exchangePath( CommandLineOptions::instance().getExchangePath() + "/bin/" + getExchangeArch() );
+    while( !exchangePath.exists() ) {
+        QMessageBox::information( nullptr, QGuiApplication::applicationDisplayName(),
+                                 tr( "Please choose the root directory of your Exchange installation. It folder must contain %1.",
+                                    "Application startup" ).arg( "bin/" + getExchangeArch() ) );
+        auto const d = QFileDialog::getExistingDirectory( nullptr, tr("Please choose the root directory of your Exchange installation.", "Application startup" ), exchangePath.path() );
+        if( d.isEmpty() ) {
+            QTimer::singleShot( 0, [] { qApp->quit(); } );
+            return;
         }
-#if defined(_MSC_VER)
-		loadSuccessful = A3DSDKLoadLibrary(exchangePath.path().toStdWString().c_str());
-#else
-		loadSuccessful = A3DSDKLoadLibrary(qPrintable( exchangePath.path() ));
-#endif    
-	}
-	else {
-#if defined(_MSC_VER)
-		loadSuccessful = A3DSDKLoadLibrary(static_cast<TCHAR*>(nullptr));
-#else
-		loadSuccessful = A3DSDKLoadLibrary(static_cast<A3DUTF8Char*>(nullptr));
-#endif	
-	}
-
-	if(!loadSuccessful) {
-        QMessageBox::critical( nullptr, QGuiApplication::applicationDisplayName(),
-                               tr("Application\nUnable to load Exchange." ) );
-
-        QTimer::singleShot( 0, [] { qApp->quit(); } );
-        return;
+        exchangePath = QDir( d + "/bin/" + getExchangeArch() );
     }
-
-    A3DInt32 iMajorVersion, iMinorVersion;
-    A3DDllGetVersion( &iMajorVersion, &iMinorVersion );
-
-    if(iMajorVersion != A3D_DLL_MAJORVERSION || iMinorVersion != A3D_DLL_MINORVERSION) {
-        QMessageBox::critical( nullptr, QGuiApplication::applicationDisplayName(),
-                               tr("HOOPS Exchange: Library version mismatch."));
-        QTimer::singleShot( 0, [] { qApp->quit(); } );
-        return;
-    }
-
-    if(A3D_SUCCESS != A3DLicPutUnifiedLicense( HOOPS_LICENSE )) {
-        QMessageBox::critical( nullptr, QGuiApplication::applicationDisplayName(),
-                               tr("License error. Please contact labs@techsoft3d.com."));
-        QTimer::singleShot( 0, [] { qApp->quit(); } );
-        return;
-    }
-
-    qInfo() << tr( "HOOPS Exchange successfully initialized." );
+        
+    _world.SetExchangeLibraryDirectory( qPrintable( exchangePath.path() ) );
 #endif
 
     MainWindow::instance()->show();
@@ -148,10 +117,4 @@ ts3d::Application::Application( int &argc, char *argv[] )
 
 // virtual
 ts3d::Application::~Application( void ) {
-#ifdef USING_EXCHANGE
-    if( A3DDllTerminate ) {
-        A3DDllTerminate();
-        A3DSDKUnloadLibrary();
-    }
-#endif
 }
