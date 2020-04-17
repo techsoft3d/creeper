@@ -96,10 +96,14 @@ ts3d::Application::Application( int &argc, char *argv[] )
     _portfolioKey.DefineNamedStyle( getHighlightStyleName(), _highlightSegmentKey );
 
 #ifdef USING_EXCHANGE
-    QDir exchangePath( CommandLineOptions::instance().getExchangePath() + "/bin/" + getExchangeArch() );
+	QDir exchangePath(QDir::currentPath() + "/exchange/" + getExchangeArch()); // Try to load from current path, this is used when distributing
+
+	if( !exchangePath.exists() )
+		exchangePath = QDir( CommandLineOptions::instance().getExchangePath() + "/bin/" + getExchangeArch() ); // Uses preprocessor def set at creation of project
+
     while( !exchangePath.exists() ) {
         QMessageBox::information( nullptr, QGuiApplication::applicationDisplayName(),
-                                 tr( "Please choose the root directory of your Exchange installation. It folder must contain %1.",
+                                 tr( "Please choose the root directory of your Exchange installation. The folder must contain %1.",
                                     "Application startup" ).arg( "bin/" + getExchangeArch() ) );
         auto const d = QFileDialog::getExistingDirectory( nullptr, tr("Please choose the root directory of your Exchange installation.", "Application startup" ), exchangePath.path() );
         if( d.isEmpty() ) {
@@ -108,7 +112,7 @@ ts3d::Application::Application( int &argc, char *argv[] )
         }
         exchangePath = QDir( d + "/bin/" + getExchangeArch() );
     }
-        
+	        
     _world.SetExchangeLibraryDirectory( qPrintable( exchangePath.path() ) );
 #endif
 
